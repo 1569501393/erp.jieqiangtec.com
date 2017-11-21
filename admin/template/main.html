@@ -46,15 +46,40 @@
 	</div>
 </div>
 <!-- 左侧导航 -->
+<?php 
+	$mod = $_GET['mod'];
+	// var_dump($mod);exit;
+?>
 <div class="admin-menu-left clearfix">
 	<ul id="nav">
 			<!-- BEGIN menu_list AS item1 -->
-			<li <!-- IF item1.sub -->class="parent level0" parent="1"<!-- ELSE -->class="level0"<!-- ENDIF -->>
+			<li  <!-- IF item1.sub --> 
+			class="parent level0 
+
+			<?php 
+				// 重组数组
+				foreach( $item1['sub'] as $k=>$v){
+					// var_dump('v==',$v['path'],$_GET['mod']);
+					// jieqiang 不规则的参数，需要&分割 delivery.WL_no_excel&warehouse_id=6
+					$path_arr = explode('&',$v['path']);
+					if($path_arr[0] == $_GET['mod']){
+					// if($v['path'] == $_GET['mod']){
+						echo 'current';
+						break;
+					} 
+				}
+
+			; ?>
+
+			 " 
+
+			parent="1" <!-- ELSE -->class="level0  <!-- IF item1.path==_GET['mod'] -->current<!-- ENDIF --> "<!-- ENDIF -->>
 				<a href="<!-- IF item1.path -->?mod={item1.path}<!-- ELSE -->javascript:void(0);<!-- ENDIF -->"><span>{item1.name}</span></a>
 				<!-- IF item1.sub -->
 				<ul class="menu-sub">
 				<!-- BEGIN item1.sub AS item2 -->
-					<li class="level1 <!-- IF item2.end -->last<!-- ENDIF --> <!-- IF item2.sub -->parent<!-- ENDIF -->" <!-- IF item2.sub -->parent="1"<!-- ENDIF -->>
+				<?php $path_arr = explode('&',$item2['path']); // var_dump('jieqiangtest=item2=',$item2);?>
+					<li class="level1 <!-- IF path_arr[0]==$_GET['mod'] -->current<!-- ENDIF -->  <!-- IF item2.end -->last<!-- ENDIF --> <!-- IF item2.sub -->parent<!-- ENDIF -->" <!-- IF item2.sub -->parent="1"<!-- ENDIF -->>
 						<a href="<!-- IF item2.sub -->javascript:void(0);<!-- ELSE -->?mod={item2.path}<!-- ENDIF -->" class=""><span>{item2.name}</span></a>
 						<!-- IF item2.sub -->
 						<ul>
