@@ -2242,7 +2242,10 @@ GROUP BY period
 
 	function GetNeedList_gls( $skuId = false, $offset = 0, $limit = 0 )
 	{
-		$sql  = "SELECT o.target_id AS channel_target_id,o.channel_id AS channel_id,o.order_time AS order_time,o.order_shipping_name AS order_shipping_name,O.order_shipping_phone AS order_shipping_phone,O.order_shipping_mobile AS order_shipping_mobile,O.order_shipping_address AS order_shipping_address,O.order_shipping_zip AS order_shipping_zip,p.*, SUM(p.quantity) AS total_quantity, SUM(p.purchase_quantity) AS total_purchase_quantity,COUNT(*) AS total_num ";
+		/*$sql  = "SELECT o.target_id AS channel_target_id,o.channel_id AS channel_id,o.order_time AS order_time,o.order_shipping_name AS order_shipping_name,O.order_shipping_phone AS order_shipping_phone,O.order_shipping_mobile AS order_shipping_mobile,O.order_shipping_address AS order_shipping_address,O.order_shipping_zip AS order_shipping_zip,p.*, SUM(p.quantity) AS total_quantity, SUM(p.purchase_quantity) AS total_purchase_quantity,COUNT(*) AS total_num ";*/
+
+		$sql  = "SELECT o.target_id AS channel_target_id,o.channel_id AS channel_id,o.order_time AS order_time,o.order_shipping_name AS order_shipping_name,o.order_shipping_phone AS order_shipping_phone,o.order_shipping_mobile AS order_shipping_mobile,o.order_shipping_address AS order_shipping_address,o.order_shipping_zip AS order_shipping_zip,p.*, SUM(p.quantity) AS total_quantity, SUM(p.purchase_quantity) AS total_purchase_quantity,COUNT(*) AS total_num ";
+
 		$sql .= "FROM shopcenter_order_product AS p LEFT JOIN shopcenter_order AS o ON o.id = p.order_id ";
 		$sql .= "WHERE p.quantity > p.purchase_quantity + p.lock_quantity ";
 
