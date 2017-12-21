@@ -94,6 +94,8 @@ elseif ( $_GET['channel_parent_id'] == 37 )
 		$orderDataList = ImportZhenPinWang( $saveFile );
 elseif ( $_GET['channel_parent_id'] == 38 )
 		$orderDataList = ImportFuKaSC( $saveFile );
+elseif ( $_GET['channel_parent_id'] == 39	 )
+		$orderDataList = ImportShanYin2017( $saveFile );
 else
 	Alert( '没有此导入类型B' );
 

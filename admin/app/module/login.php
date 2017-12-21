@@ -9,6 +9,8 @@ if ( !$_POST )
 {
 	
 	$tpl['BgNum'] = substr(time(), -1);
+	
+	
 	Common::PageOut( 'loginCAT.html', $tpl, false, false );
 }
 else
