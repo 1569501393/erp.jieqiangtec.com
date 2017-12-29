@@ -7,10 +7,10 @@
 
 if ( !$_POST )
 {
-	
-	$tpl['BgNum'] = substr(time(), -1);
-	
-	
+
+	// $tpl['BgNum'] = substr(time(), -1);
+	$tpl['BgNum'] = rand(0,29);
+	// var_dump($tpl['BgNum'],time(),$tpl);exit;
 	Common::PageOut( 'loginCAT.html', $tpl, false, false );
 }
 else
