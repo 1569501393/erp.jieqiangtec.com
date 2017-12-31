@@ -9,7 +9,7 @@ class FrontController extends Controller
 		global $quoteData, $AccessControl, $__GroupSession;
 
 		$firstModule = current( GetExplode( '.', $this->module ) );
-
+        // var_dump('TODO jieqiangtest==$firstModule==',$firstModule,debug_backtrace());exit;
 		$freeModule = array( 'login', 'tool.upload', 'product.upload.image', 'product.attribute.upload' );
 
 		if ( !$firstModule )
@@ -17,6 +17,7 @@ class FrontController extends Controller
 			Redirect( '?mod=index' );
 		}
 
+		// 权限管理
 		$inAccess = $AccessControl->InModule( $this->module, $this->action );
 
 		$session = Common::GetSession();

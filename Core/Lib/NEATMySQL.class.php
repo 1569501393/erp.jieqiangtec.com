@@ -1,303 +1,308 @@
 <?php
 
 /**
-* MySQL ˝æ›ø‚≤Ÿ◊˜¿‡
-* Created / Modify : 2004-02-20 / 2005-4-10
-* @name  NEATDataBaseMySQL
-* @version  1.0.4
-* @author  walkerlee / gouki / hihiyou
-* @copyright  Powered by NEATSTUDIO 2002 - 2005 <neatstudio@qq.com>
-* @link http://www.neatstudio.com NeatStudio
-* @package NEATFramework
-* @subpackage NEATDataBase
-*/
+ * MySQLÊï∞ÊçÆÂ∫ìÊìç‰ΩúÁ±ª
+ * Created / Modify : 2004-02-20 / 2005-4-10
+ * @name  NEATDataBaseMySQL
+ * @version  1.0.4
+ * @author  walkerlee / gouki / hihiyou
+ * @copyright  Powered by NEATSTUDIO 2002 - 2005 <neatstudio@qq.com>
+ * @link http://www.neatstudio.com NeatStudio
+ * @package NEATFramework
+ * @subpackage NEATDataBase
+ */
 
 class NEATMySQL
 {
 
-	/**
-	* ≤È—Ø≤Ÿ◊˜◊‹¥Œ ˝
-	* @var integer $selectQueries
-	*/
-	var $selectQueries		= 0;
+    /**
+     * Êü•ËØ¢Êìç‰ΩúÊÄªÊ¨°Êï∞
+     * @var integer $selectQueries
+     */
+    var $selectQueries = 0;
 
-	/**
-	* ∏¸–¬≤Ÿ◊˜◊‹¥Œ ˝
-	* @var integer $updateQueries
-	*/
-	var $updateQueries		= 0;
+    /**
+     * Êõ¥Êñ∞Êìç‰ΩúÊÄªÊ¨°Êï∞
+     * @var integer $updateQueries
+     */
+    var $updateQueries = 0;
 
-	/**
-	*  ±º‰–ﬁ’˝÷µ
-	* @var integer $timeOffset
-	*/
-	var $timeOffset		= 8;
+    /**
+     * Êó∂Èó¥‰øÆÊ≠£ÂÄº
+     * @var integer $timeOffset
+     */
+    var $timeOffset = 8;
 
-	var $SQL;
+    var $SQL;
 
-	/**
-	* ππ‘Ï∫Ø ˝
-	* @param string $server MySQL ˝æ›ø‚∑√Œ µÿ÷∑
-	* @param string $user MySQL”√ªß√˚
-	* @param string $password MySQLµ«¬Ω√‹¬Î
-	* @param string $database MySQL ˝æ›ø‚
-	* @param integer $pConnect  «∑Ò π”√pConnect ( ≥÷–¯¡¨Ω” )
-	* @param integer $autoRun  «∑Ò◊‘∂Ø¡¨Ω”
-	* @return NEATMySQL
-	* @access private
-	*/
-	function NEATMySQL( $server,  $user,  $password,  $database,  $pConnect = 0, $autoRun = 1 )
-	{
-		$this->pConnect = $pConnect;
+    /**
+     * ÊûÑÈÄ†ÂáΩÊï∞
+     * @param string $server MySQLÊï∞ÊçÆÂ∫ìËÆøÈóÆÂú∞ÂùÄ
+     * @param string $user MySQLÁî®Êà∑Âêç
+     * @param string $password MySQLÁôªÈôÜÂØÜÁ†Å
+     * @param string $database MySQLÊï∞ÊçÆÂ∫ì
+     * @param integer $pConnect ÊòØÂê¶‰ΩøÁî®pConnect ( ÊåÅÁª≠ËøûÊé• )
+     * @param integer $autoRun ÊòØÂê¶Ëá™Âä®ËøûÊé•
+     * @return NEATMySQL
+     * @access private
+     */
+    function NEATMySQL($server, $user, $password, $database, $pConnect = 0, $autoRun = 1)
+    {
+        $this->pConnect = $pConnect;
 
-		if  ( $autoRun == 1 )
-			$this->Connect( $server,  $user,  $password,  $database );
-	}
+        if ($autoRun == 1)
+            $this->Connect($server, $user, $password, $database);
+    }
 
-	/**
-	* ¡¨Ω” ˝æ›ø‚
-	* @param string $server MySQL ˝æ›ø‚∑√Œ µÿ÷∑
-	* @param string $user MySQL”√ªß√˚
-	* @param string $password MySQLµ«¬Ω√‹¬Î
-	* @param string $database MySQL ˝æ›ø‚
-	* @return boolean
-	* @access publics
-	*/
-	function Connect( $server,  $user,  $password,  $database )
-	{
-		$connectType = ( $this->pConnect ) ?  'mysql_pconnect' : 'mysql_connect';
-		$this->conn = @$connectType( $server,  $user,  $password );
+    /**
+     * ËøûÊé•Êï∞ÊçÆÂ∫ì
+     * @param string $server MySQLÊï∞ÊçÆÂ∫ìËÆøÈóÆÂú∞ÂùÄ
+     * @param string $user MySQLÁî®Êà∑Âêç
+     * @param string $password MySQLÁôªÈôÜÂØÜÁ†Å
+     * @param string $database MySQLÊï∞ÊçÆÂ∫ì
+     * @return boolean
+     * @access publics
+     */
+    function Connect($server, $user, $password, $database)
+    {
+        $connectType = ($this->pConnect) ? 'mysql_pconnect' : 'mysql_connect';
+        $this->conn = @$connectType($server, $user, $password);
 
-		if  ( !$this->conn )
-		{
-			$this->Error( 'Fail to connect to MySQL server' );
-			return false;
-		}
+        if (!$this->conn) {
+            $this->Error('Fail to connect to MySQL server');
+            return false;
+        }
 
-		if ( $database )
-		{
-			if ( !mysql_select_db( $database, $this->conn ) )
-			{
-				$this->Error( 'Cannot use database : ' . $database );
-				return false;
-			}
-		}
-	}
+        if ($database) {
+            if (!mysql_select_db($database, $this->conn)) {
+                $this->Error('Cannot use database : ' . $database);
+                return false;
+            }
+        }
+    }
 
-	/**
-	* ∂œø™ ˝æ›ø‚¡¨Ω”
-	* @return boolean
-	* @access publics
-	*/
-	 function Disconnect()
-	{
-		return mysql_close( $this->conn );
-	}
+    /**
+     * Êñ≠ÂºÄÊï∞ÊçÆÂ∫ìËøûÊé•
+     * @return boolean
+     * @access publics
+     */
+    function Disconnect()
+    {
+        return mysql_close($this->conn);
+    }
 
-	/**
-	* ªÒ»°≤È—Ø≤Ÿ◊˜◊‹¥Œ ˝
-	* @return integer
-	* @access publics
-	*/
-	function GetSelectQueries()
-	{
-		return $this->SelectQueries;
+    /**
+     * Ëé∑ÂèñÊü•ËØ¢Êìç‰ΩúÊÄªÊ¨°Êï∞
+     * @return integer
+     * @access publics
+     */
+    function GetSelectQueries()
+    {
+        return $this->SelectQueries;
 
-	}
+    }
 
-	/**
-	* ªÒ»°∏¸–¬≤Ÿ◊˜◊‹¥Œ ˝
-	* @return integer
-	* @access publics
-	*/
-	function GetUpdateQueries()
-	{
-		return $this->updateQueries;
-	}
+    /**
+     * Ëé∑ÂèñÊõ¥Êñ∞Êìç‰ΩúÊÄªÊ¨°Êï∞
+     * @return integer
+     * @access publics
+     */
+    function GetUpdateQueries()
+    {
+        return $this->updateQueries;
+    }
 
-	/**
-	* ∑¢ÀÕ≤È—Ø≤Ÿ◊˜”Ôæ‰ ( for select )
-	* @param string $queryString ≤È—Ø≤Ÿ◊˜SQL”Ôæ‰
-	* @param integer $beginRow ø™ º–– ˝
-	* @param integer $limit  ˝¡ø∑∂Œß
-	* @return object
-	* @access publics
-	*/
-	function Query( $queryString,  $beginRow = 0,  $limit = 0 )
-	{
-		if ( $limit )
-			$queryString .= " LIMIT " . $beginRow." , " . $limit;
+    /**
+     * ÂèëÈÄÅÊü•ËØ¢Êìç‰ΩúËØ≠Âè• ( for select )
+     * @param string $queryString Êü•ËØ¢Êìç‰ΩúSQLËØ≠Âè•
+     * @param integer $beginRow ÂºÄÂßãË°åÊï∞
+     * @param integer $limit Êï∞ÈáèËåÉÂõ¥
+     * @return object
+     * @access publics
+     */
+    function Query($queryString, $beginRow = 0, $limit = 0)
+    {
+        if ($limit)
+            $queryString .= " LIMIT " . $beginRow . " , " . $limit;
 
-		$queryid = mysql_query( $queryString,  $this->conn );
+        $queryid = mysql_query($queryString, $this->conn);
 
-		$this->selectQueries++;
+        // TODO Êó•ÂøóËÆ∞ÂΩï
+        log_write('NEATMySQL.class.php ==Query==' . "\r\n" . $queryString, 'NOTICE sql Êü•ËØ¢ $queryid:' . $queryid);
+//        var_dump('TODO jieqiangtest ==$rs==',$queryid);exit;
 
-		$this->SQL[] = $queryString;
 
-		if ( !$queryid )
-			$this->Error( "Invalid SQL : ".$queryString );
-		
-		return (new NEATMySQLResult( $queryid ) );
-	}
+        $this->selectQueries++;
 
-	/**
-	* ∑¢ÀÕ∏¸–¬≤Ÿ◊˜”Ôæ‰ ( for insert, update, delete )
-	* @param string $queryString ∏¸–¬≤Ÿ◊˜SQL”Ôæ‰
-	* @return void
-	* @access publics
-	*/
-	function Update( $queryString )
-	{
-		$queryid = mysql_query( $queryString,  $this->conn );
+        $this->SQL[] = $queryString;
 
-		$this->updateQueries++;
+        if (!$queryid)
+            $this->Error("Invalid SQL : " . $queryString);
 
-		$this->SQL[] = $queryString;
+        return (new NEATMySQLResult($queryid));
+    }
 
-		if ( !$queryid )
-			$this->Error( "Invalid SQL : " . $queryString );
+    /**
+     * ÂèëÈÄÅÊõ¥Êñ∞Êìç‰ΩúËØ≠Âè• ( for insert, update, delete )
+     * @param string $queryString Êõ¥Êñ∞Êìç‰ΩúSQLËØ≠Âè•
+     * @return void
+     * @access publics
+     */
+    function Update($queryString)
+    {
+        $queryid = mysql_query($queryString, $this->conn);
+        // TODO Êó•ÂøóËÆ∞ÂΩï
+        log_write('NEATMySQL.class.php ==Update==' . "\r\n" . $queryString, 'NOTICE sql Êõ¥Êñ∞ $queryid:' . $queryid);
+//        var_dump('TODO jieqiangtest ==$rs==',$queryid);exit;
 
-		return $queryid;
-	}
+        $this->updateQueries++;
 
-	/**
-	* ∑µªÿ◊Ó∫Û≤Ÿ◊˜”∞œÏµƒID
-	* @return integer
-	* @access publics
-	*/
-	function LastID()
-	{
-		return mysql_insert_id( $this->conn );
-	}
+        $this->SQL[] = $queryString;
 
-	/**
-	* œ‘ æMySQL¥ÌŒÛ–≈œ¢
-	* @param string $msg æﬂÃÂµƒ¥ÌŒÛ–≈œ¢
-	* @return void
-	* @access publics
-	*/
-	function Error( $msg )
-	{
-		$errorTime = gmdate( "Y-n-j g:i a",  time() + ( $this->timeOffset * 3600 ) );
+        if (!$queryid)
+            $this->Error("Invalid SQL : " . $queryString);
 
-		$mysql_error = @mysql_error( $this->conn );
-		$mysql_errno = @mysql_errno ($this->conn );
+        return $queryid;
+    }
 
-		printf( "<div style=\"font-family: 'Verdana', 'Arial', 'Helvetica', 'sans-serif'; font-size: 12px\">MySQL error message :</div><textarea rows=\"10\" cols=\"100\" style=\"font-family: 'Verdana', 'Arial', 'Helvetica', 'sans-serif'; font-size: 8pt\">\ntime : %s\n--------------------------------\n%s\n--------------------------------\nmysql error : %s\nmysql error no. : %s</textarea>",  $errorTime,  $msg,  $mysql_error,  $mysql_errno );
+    /**
+     * ËøîÂõûÊúÄÂêéÊìç‰ΩúÂΩ±ÂìçÁöÑID
+     * @return integer
+     * @access publics
+     */
+    function LastID()
+    {
+        return mysql_insert_id($this->conn);
+    }
 
-		exit;
-	}
+    /**
+     * ÊòæÁ§∫MySQLÈîôËØØ‰ø°ÊÅØ
+     * @param string $msg ÂÖ∑‰ΩìÁöÑÈîôËØØ‰ø°ÊÅØ
+     * @return void
+     * @access publics
+     */
+    function Error($msg)
+    {
+        $errorTime = gmdate("Y-n-j g:i a", time() + ($this->timeOffset * 3600));
 
-	function Begin()
-	{
-		mysql_query( "BEGIN",  $this->conn );
-	}
+        $mysql_error = @mysql_error($this->conn);
+        $mysql_errno = @mysql_errno($this->conn);
 
-	function Commit()
-	{
-		mysql_query( "COMMIT",  $this->conn );
-	}
+        printf("<div style=\"font-family: 'Verdana', 'Arial', 'Helvetica', 'sans-serif'; font-size: 12px\">MySQL error message :</div><textarea rows=\"10\" cols=\"100\" style=\"font-family: 'Verdana', 'Arial', 'Helvetica', 'sans-serif'; font-size: 8pt\">\ntime : %s\n--------------------------------\n%s\n--------------------------------\nmysql error : %s\nmysql error no. : %s</textarea>", $errorTime, $msg, $mysql_error, $mysql_errno);
 
-	function RollBack()
-	{
-		mysql_query( "ROLLBACK",  $this->conn );
-	}
+        exit;
+    }
+
+    function Begin()
+    {
+        mysql_query("BEGIN", $this->conn);
+    }
+
+    function Commit()
+    {
+        mysql_query("COMMIT", $this->conn);
+    }
+
+    function RollBack()
+    {
+        mysql_query("ROLLBACK", $this->conn);
+    }
 
 }
 
 /**
-* MySQL≤È—ØΩ·π˚ ˝æ›ºØ
-* @package NEATFramework
-* @subpackage NEATDataBase
-*/
+ * MySQLÊü•ËØ¢ÁªìÊûúÊï∞ÊçÆÈõÜ
+ * @package NEATFramework
+ * @subpackage NEATDataBase
+ */
 Class NEATMySQLResult
 {
 
-	/**
-	* MySQLΩ¯≥ÃID
-	* @var integer $resultID
-	*/
-	var $resultID	= 0;
+    /**
+     * MySQLËøõÁ®ãID
+     * @var integer $resultID
+     */
+    var $resultID = 0;
 
-	/**
-	* Ω·π˚ºØ–– ˝
-	* @var integer $rows
-	*/
-	var $rows	= 0;
+    /**
+     * ÁªìÊûúÈõÜË°åÊï∞
+     * @var integer $rows
+     */
+    var $rows = 0;
 
-	/**
-	* µ•–– ˝æ›ºØ
-	* @var array $record
-	*/
-	var $record	= array();
+    /**
+     * ÂçïË°åÊï∞ÊçÆÈõÜ
+     * @var array $record
+     */
+    var $record = array();
 
-	/**
-	* ππ‘Ï∫Ø ˝
-	* @param integer $resultID Õ®π˝∑¢ÀÕ≤È—Ø≤Ÿ◊˜µ√µΩµƒMySQLΩ¯≥Ã±Í ∂
-	* @return NEATMySQLResult
-	* @access private
-	*/
-	function NEATMySQLResult( $resultID )
-	{
-		$this->resultID = $resultID;
-	}
+    /**
+     * ÊûÑÈÄ†ÂáΩÊï∞
+     * @param integer $resultID ÈÄöËøáÂèëÈÄÅÊü•ËØ¢Êìç‰ΩúÂæóÂà∞ÁöÑMySQLËøõÁ®ãÊ†áËØÜ
+     * @return NEATMySQLResult
+     * @access private
+     */
+    function NEATMySQLResult($resultID)
+    {
+        $this->resultID = $resultID;
+    }
 
-	/**
-	* “∆∂Ø ˝æ›ºØ÷∏’Î
-	* @return boolean
-	* @access public
-	*/
-	function NextRecord()
-	{
-		$this->record = mysql_fetch_array( $this->resultID,  MYSQL_ASSOC );
-		
-		$this->rows++;
+    /**
+     * ÁßªÂä®Êï∞ÊçÆÈõÜÊåáÈíà
+     * @return boolean
+     * @access public
+     */
+    function NextRecord()
+    {
+        $this->record = mysql_fetch_array($this->resultID, MYSQL_ASSOC);
 
-		$status = is_array( $this->record );
-		return $status;
-	}
+        $this->rows++;
 
-	/**
-	* ªÒ»° ˝æ›◊÷∂Œ÷µ
-	* @param string $name ◊÷∂Œ√˚
-	* @return mixed
-	* @access public
-	*/
-	function Get( $name )
-	{
-		return $this->record[$name];
-	}
+        $status = is_array($this->record);
+        return $status;
+    }
 
-	/**
-	* ªÒ»°µ±«∞÷∏’ÎÀ˘÷∏œÚµƒ ˝æ› ˝◊È
-	* @return array
-	* @access public
-	*/
-	function GetArray()
-	{
-		return $this->record;
-	}
+    /**
+     * Ëé∑ÂèñÊï∞ÊçÆÂ≠óÊÆµÂÄº
+     * @param string $name Â≠óÊÆµÂêç
+     * @return mixed
+     * @access public
+     */
+    function Get($name)
+    {
+        return $this->record[$name];
+    }
 
-	/**
-	* ªÒ»°µ±«∞ ˝æ›ºØµƒ–– ˝
-	* @return integer
-	* @access public
-	*/
-	function Rows()
-	{
-		return mysql_num_rows( $this->resultID );
-	}
+    /**
+     * Ëé∑ÂèñÂΩìÂâçÊåáÈíàÊâÄÊåáÂêëÁöÑÊï∞ÊçÆÊï∞ÁªÑ
+     * @return array
+     * @access public
+     */
+    function GetArray()
+    {
+        return $this->record;
+    }
 
-	/**
-	*  Õ∑≈MySQL≤È—ØΩ¯≥Ã
-	* @return viod
-	* @access public
-	*/
-	function Free() 
-	{
-		mysql_free_result( $this->resultID );
-		$this->resultID = 0;
-	}
+    /**
+     * Ëé∑ÂèñÂΩìÂâçÊï∞ÊçÆÈõÜÁöÑË°åÊï∞
+     * @return integer
+     * @access public
+     */
+    function Rows()
+    {
+        return mysql_num_rows($this->resultID);
+    }
+
+    /**
+     * ÈáäÊîæMySQLÊü•ËØ¢ËøõÁ®ã
+     * @return viod
+     * @access public
+     */
+    function Free()
+    {
+        mysql_free_result($this->resultID);
+        $this->resultID = 0;
+    }
 
 }
 

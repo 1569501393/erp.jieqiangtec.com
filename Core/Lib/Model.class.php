@@ -1,316 +1,312 @@
 <?php
 
 /**
-* 定义 Model 类
-* Model 类封装了一系列数据库操作
-* @copyright Copyright (c) 2004 NeatStudio.com
-* @author hihiyou
-*/
+ * 定义 Model 类
+ * Model 类封装了一系列数据库操作
+ * @copyright Copyright (c) 2004 NeatStudio.com
+ * @author hihiyou
+ */
 
 class Model
 {
-	/**
-	* 数据类
-	* @var object
-	*/
-	var $DB;
-	
-	/**
-	* 数据表名称
-	* @var array
-	*/
-	var $table = array();
+    /**
+     * 数据类
+     * @var object
+     */
+    var $DB;
 
-	/**
-	* Model
-	* 构造函数
-	*/
-	function Model( & $DB )
-	{
-		$this->DB = & $DB;
-	}
+    /**
+     * 数据表名称
+     * @var array
+     */
+    var $table = array();
 
-	/**
-	* SetDB
-	* 设置数据库操作实例
-	*/
-	function SetDB( & $DB )
-	{
-		$this->DB = & $DB;
-	}
+    /**
+     * Model
+     * 构造函数
+     */
+    function Model(& $DB)
+    {
+        $this->DB = &$DB;
+    }
 
-	/**
-	* SetTable
-	* 设置数据表名称
-	*/
-	function SetTable( $name, $table )
-	{
-		$this->table[$name] = $table;
-	}
+    /**
+     * SetDB
+     * 设置数据库操作实例
+     */
+    function SetDB(& $DB)
+    {
+        $this->DB = &$DB;
+    }
 
-	/**
-	* Get
-	* 取得一条指定条件的数据
-	* $table
-	* $condition
-	* $select
-	* $conditionExt
-	*/
-	function Get( $array )
-	{
-		@extract( $array );
+    /**
+     * SetTable
+     * 设置数据表名称
+     */
+    function SetTable($name, $table)
+    {
+        $this->table[$name] = $table;
+    }
 
-		$select = $select ? $select : '*';
-		$table = $this->table[$table] ? $this->table[$table] : $table;
-		$where = $this->_parseCondition( $condition, $conditionExt );
+    /**
+     * Get
+     * 取得一条指定条件的数据
+     * $table
+     * $condition
+     * $select
+     * $conditionExt
+     */
+    function Get($array)
+    {
+        @extract($array);
 
-		if ( !$sql )
-		{
-			$sql  = "SELECT {$select} FROM {$table} ";
-			$sql .= $where ? "WHERE {$where} " : " ";
-			$sql .= $order ? "ORDER BY {$order} " : '';
-			$sql .= "LIMIT 1";
-		}
+        $select = $select ? $select : '*';
+        $table = $this->table[$table] ? $this->table[$table] : $table;
+        $where = $this->_parseCondition($condition, $conditionExt);
 
-		$rs = $this->DB->Query( $sql );
+        if (!$sql) {
+            $sql = "SELECT {$select} FROM {$table} ";
+            $sql .= $where ? "WHERE {$where} " : " ";
+            $sql .= $order ? "ORDER BY {$order} " : '';
+            $sql .= "LIMIT 1";
+        }
 
-		$rs->NextRecord();
+        $rs = $this->DB->Query($sql);
 
-		$info = $rs->GetArray();
+        $rs->NextRecord();
 
-		if ( $key )
-			return $info[$key];
-		else
-			return $info;
-	}
+        $info = $rs->GetArray();
 
-	/**
-	* GetList
-	* 取得指定条件的数据列表
-	* $table
-	* $condition
-	* $order
-	* $offset
-	* $limit
-	* $key
-	* $conditionExt
-	* $select
-	* $group
-	*/
-	function GetList( $array )
-	{
-		@extract( $array );
+        if ($key)
+            return $info[$key];
+        else
+            return $info;
+    }
 
-		$select = $select ? $select : '*';
-		$table = $this->table[$table] ? $this->table[$table] : $table;
-		$where = $this->_parseCondition( $condition, $conditionExt );
+    /**
+     * GetList
+     * 取得指定条件的数据列表
+     * $table
+     * $condition
+     * $order
+     * $offset
+     * $limit
+     * $key
+     * $conditionExt
+     * $select
+     * $group
+     */
+    function GetList($array)
+    {
+        @extract($array);
+        // var_dump('TODO jieqiangtest ==$array==',$array);exit;
+        $select = $select ? $select : '*';
+        $table = $this->table[$table] ? $this->table[$table] : $table;
+        $where = $this->_parseCondition($condition, $conditionExt);
 
-		if ( !$sql )
-		{
-			$sql  = "SELECT {$select} FROM {$table} ";
-			$sql .= $where ? "WHERE {$where} " : '';
-			$sql .= $group ? "GROUP BY {$group} " : '';
-			$sql .= $order ? "ORDER BY {$order} " : '';
-		}
+        if (!$sql) {
+            $sql = "SELECT {$select} FROM {$table} ";
+            $sql .= $where ? "WHERE {$where} " : '';
+            $sql .= $group ? "GROUP BY {$group} " : '';
+            $sql .= $order ? "ORDER BY {$order} " : '';
+        }
 
-		$rs = $this->DB->Query( $sql, $offset, $limit );
+        // var_dump('TODO jieqiangtest ==$sql==',$sql, $offset, $limit);exit;
 
-		$array = array();
+        $rs = $this->DB->Query($sql, $offset, $limit);
 
-		while ( $rs->NextRecord() )
-		{
-			if ( $key )
-				$array[$rs->Get( $key )] = $rs->GetArray();
-			else
-				$array[] = $rs->GetArray();
-		}
+        // TODO 日志记录
+        /*log_write('GetList=='."\r\n".$sql. $offset.$limit,'NOTICE sql');
+        var_dump('TODO jieqiangtest ==$rs==',$rs);exit;*/
 
-		return $array;
-	}
+        $array = array();
 
-	function GetListBySQL( $array )
-	{
-		@extract( $array );
+        while ($rs->NextRecord()) {
+            if ($key)
+                $array[$rs->Get($key)] = $rs->GetArray();
+            else
+                $array[] = $rs->GetArray();
+        }
 
-		$rs = $this->DB->Query( $sql, $offset, $limit );
+        return $array;
+    }
 
-		$array = array();
+    function GetListBySQL($array)
+    {
+        @extract($array);
 
-		while ( $rs->NextRecord() )
-		{
-			if ( $key )
-				$array[$rs->Get( $key )] = $rs->GetArray();
-			else
-				$array[] = $rs->GetArray();
-		}
+        $rs = $this->DB->Query($sql, $offset, $limit);
 
-		return $array;
-	}
+        $array = array();
 
-	/**
-	* Del
-	* 删除指定数据
-	* $table
-	* $condition
-	* $conditionExt
-	*/
-	function Del( $array )
-	{
-		@extract( $array );
+        while ($rs->NextRecord()) {
+            if ($key)
+                $array[$rs->Get($key)] = $rs->GetArray();
+            else
+                $array[] = $rs->GetArray();
+        }
 
-		$table = $this->table[$table] ? $this->table[$table] : $table;
-		$where = $this->_parseCondition( $condition, $conditionExt );
+        return $array;
+    }
 
-		$sql  = "DELETE FROM {$table} ";
-		$sql .= $where ? "WHERE {$where} " : '';
+    /**
+     * Del
+     * 删除指定数据
+     * $table
+     * $condition
+     * $conditionExt
+     */
+    function Del($array)
+    {
+        @extract($array);
 
-		return $this->DB->Update( $sql );
-	}
+        $table = $this->table[$table] ? $this->table[$table] : $table;
+        $where = $this->_parseCondition($condition, $conditionExt);
 
-	/**
-	* Update
-	* 更新指定数据
-	* $table
-	* $condition
-	* $conditionExt
-	* $data
-	* $dataExt
-	*/
-	function Update( $array )
-	{
-		@extract( $array );
-		
-		$table = $this->table[$table] ? $this->table[$table] : $table;
-		$set = $this->_parseData( $data, $dataExt );
-		$where = $this->_parseCondition( $condition, $conditionExt );
+        $sql = "DELETE FROM {$table} ";
+        $sql .= $where ? "WHERE {$where} " : '';
 
-		if ( !$sql )
-		{
-			$sql  = "UPDATE {$table} ";
-			$sql .= $set ? "SET {$set} " : '';
-			$sql .= $where ? "WHERE {$where} " : '';
-		}
+        return $this->DB->Update($sql);
+    }
 
-		return $this->DB->Update( $sql );
-	}
+    /**
+     * Update
+     * 更新指定数据
+     * $table
+     * $condition
+     * $conditionExt
+     * $data
+     * $dataExt
+     */
+    function Update($array)
+    {
+        @extract($array);
 
-	/**
-	* Add
-	* 插入数据
-	* $table
-	* $data
-	*/
-	function Add( $array )
-	{
-		@extract( $array );
+        $table = $this->table[$table] ? $this->table[$table] : $table;
+        $set = $this->_parseData($data, $dataExt);
+        $where = $this->_parseCondition($condition, $conditionExt);
 
-		$sign = '';
-		$fields = '';
-		$values = '';
-		foreach ( $data as $key => $val )
-		{
-			$fields .= $sign . $key;
-			$values .= $sign . "'" . addslashes( $val ) . "'";
-			$sign = ',';
-		}
+        if (!$sql) {
+            $sql = "UPDATE {$table} ";
+            $sql .= $set ? "SET {$set} " : '';
+            $sql .= $where ? "WHERE {$where} " : '';
+        }
 
-		$table = $this->table[$table] ? $this->table[$table] : $table;
+        return $this->DB->Update($sql);
+    }
 
-		$sql  = "INSERT INTO {$table} ";
-		$sql .= "( {$fields} ) ";
-		$sql .= "VALUES ( {$values} )";
+    /**
+     * Add
+     * 插入数据
+     * $table
+     * $data
+     */
+    function Add($array)
+    {
+        @extract($array);
 
-		return $this->DB->Update( $sql );
-	}
+        $sign = '';
+        $fields = '';
+        $values = '';
+        foreach ($data as $key => $val) {
+            $fields .= $sign . $key;
+            $values .= $sign . "'" . addslashes($val) . "'";
+            $sign = ',';
+        }
 
-	/**
-	* Replace
-	* 插入数据
-	* $table
-	* $data
-	*/
-	function Replace( $array )
-	{
-		@extract( $array );
+        $table = $this->table[$table] ? $this->table[$table] : $table;
 
-		$sign = '';
-		$fields = '';
-		$values = '';
-		foreach ( $data as $key => $val )
-		{
-			$fields .= $sign . $key;
-			$values .= $sign . "'" . addslashes( $val ) . "'";
-			$sign = ',';
-		}
+        $sql = "INSERT INTO {$table} ";
+        $sql .= "( {$fields} ) ";
+        $sql .= "VALUES ( {$values} )";
 
-		$table = $this->table[$table] ? $this->table[$table] : $table;
+        return $this->DB->Update($sql);
+    }
 
-		$sql  = "Replace INTO {$table} ";
-		$sql .= "( {$fields} ) ";
-		$sql .= "VALUES ( {$values} )";
+    /**
+     * Replace
+     * 插入数据
+     * $table
+     * $data
+     */
+    function Replace($array)
+    {
+        @extract($array);
 
-		return $this->DB->Update( $sql );
-	}
+        $sign = '';
+        $fields = '';
+        $values = '';
+        foreach ($data as $key => $val) {
+            $fields .= $sign . $key;
+            $values .= $sign . "'" . addslashes($val) . "'";
+            $sign = ',';
+        }
 
-	/**
-	* _parseCondition
-	* 构造条件 "WHERE"之后的语句
-	* $condition 参数,构造条件字符串
-	*/
-	function _parseCondition( $condition, $conditionExt )
-	{
-		if ( !$condition && !$conditionExt )
-			return '';
+        $table = $this->table[$table] ? $this->table[$table] : $table;
 
-		if ( is_array( $conditionExt ) )
-			$conditionExt = implode( " AND ", $conditionExt );
+        $sql = "Replace INTO {$table} ";
+        $sql .= "( {$fields} ) ";
+        $sql .= "VALUES ( {$values} )";
 
-		if ( is_array( $condition ) )
-		{
-			foreach ( $condition as $k => $v )
-			{
-				$conditionList[] = "$k = '" . addslashes( $v ) . "'";
-			}
+        return $this->DB->Update($sql);
+    }
 
-			$sql = @implode( " AND ", $conditionList );
-		}
+    /**
+     * _parseCondition
+     * 构造条件 "WHERE"之后的语句
+     * $condition 参数,构造条件字符串
+     */
+    function _parseCondition($condition, $conditionExt)
+    {
+        if (!$condition && !$conditionExt)
+            return '';
 
-		if ( $sql && $conditionExt )
-			return $sql . " AND {$conditionExt} ";
-		elseif ( !$sql && $conditionExt )
-			return $conditionExt;
-		else
-			return $sql;
-	}
+        if (is_array($conditionExt))
+            $conditionExt = implode(" AND ", $conditionExt);
 
-	/**
-	* _parseData
-	* 构造 "SET" 之后的语句
-	* $dataExt 参数,附加的SET参数
-	*/
-	function _parseData( $data, $dataExt )
-	{
-		if ( is_array( $data ) )
-		{
-			foreach ( $data as $key => $val )
-			{
-				$dataList[] = "{$key} = '" . addslashes( $val ) . "'";
-			}
+        if (is_array($condition)) {
+            foreach ($condition as $k => $v) {
+                $conditionList[] = "$k = '" . addslashes($v) . "'";
+            }
 
-			$set	= @implode( ',', $dataList );
-		}
+            $sql = @implode(" AND ", $conditionList);
+        }
 
-		if ( $set && $dataExt )
-			return  "{$set} , {$dataExt} ";
-		elseif ( !$set && $dataExt )
-			return $dataExt;
-		else
-			return $set;
-	}
+        if ($sql && $conditionExt)
+            return $sql . " AND {$conditionExt} ";
+        elseif (!$sql && $conditionExt)
+            return $conditionExt;
+        else
+            return $sql;
+    }
 
-	function Error( $msg )
-	{
-		exit( $msg );
-	}
+    /**
+     * _parseData
+     * 构造 "SET" 之后的语句
+     * $dataExt 参数,附加的SET参数
+     */
+    function _parseData($data, $dataExt)
+    {
+        if (is_array($data)) {
+            foreach ($data as $key => $val) {
+                $dataList[] = "{$key} = '" . addslashes($val) . "'";
+            }
+
+            $set = @implode(',', $dataList);
+        }
+
+        if ($set && $dataExt)
+            return "{$set} , {$dataExt} ";
+        elseif (!$set && $dataExt)
+            return $dataExt;
+        else
+            return $set;
+    }
+
+    function Error($msg)
+    {
+        exit($msg);
+    }
 }
+
 ?>
