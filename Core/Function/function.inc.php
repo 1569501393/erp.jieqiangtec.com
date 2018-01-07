@@ -53,7 +53,10 @@ function log_write($message, $level = 'ERR', $type = 3, $destination = '', $extr
         $destination = $destination ? $destination : '';
         $extra = $extra ? $extra : '';
     }
-    error_log("{$now} {$level}: {$message}\r\n\r\n", $type, $destination, $extra);
+    // $url = 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+    $url = $_SERVER["REQUEST_URI"];
+    error_log("{$now} {$url}\r\n {$level}: {$message}\r\n\r\n", $type, $destination, $extra);
+    // error_log("{$now} {$level}: {$message}\r\n", $type,$destination,$extra );
     //clearstatcache();
 }
 
