@@ -58,6 +58,8 @@ $AccessControl->SetModule( $ModuleControl->GetModule() );
 $__UserAuth = Common::GetSession();
 
 $AdminModel = Core::ImportModel( 'Admin' );
+
+// TODO jieqiangtest 检查用户信息
 $adminInfo = $AdminModel->GetAdministrator( $__UserAuth['user_id'] );
 $__UserAuth['user_group'] = $adminInfo['user_group'];
 $__UserAuth['user_call'] = $adminInfo['user_call'];
