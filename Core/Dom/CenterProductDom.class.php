@@ -2,243 +2,220 @@
 
 class CenterProductDom
 {
-	var $id = 0;
+    var $id = 0;
 
-	function CenterProductDom( $info )
-	{
-		if ( is_numeric( $info ) )
-		{
-			$this->id = $info;
-			$this->Init();
-		}
-		else
-		{
-			$this->Init( $info );
-		}
-	}
+    function CenterProductDom($info)
+    {
+        if (is_numeric($info)) {
+            $this->id = $info;
+            $this->Init();
+        } else {
+            $this->Init($info);
+        }
+    }
 
-	function Init( $array = array() )
-	{
-		if ( is_array( $array ) && $array )
-		{
-			$this->id = $array['id'];
+    function Init($array = array())
+    {
+        if (is_array($array) && $array) {
+            $this->id = $array['id'];
 
-			foreach ( $array as $key => $val )
-			{
-				$this->info[$key] = $val;
-			}
-		}
-		elseif ( $this->id )
-		{			
-			$CenterProductModel = Core::ImportModel( 'CenterProduct' );
-			$productInfo = $CenterProductModel->Get( $this->id );
+            foreach ($array as $key => $val) {
+                $this->info[$key] = $val;
+            }
+        } elseif ($this->id) {
+            $CenterProductModel = Core::ImportModel('CenterProduct');
+            $productInfo = $CenterProductModel->Get($this->id);
 
-			$productInfo ? $this->Init( $productInfo ) : null;
-		}
+            $productInfo ? $this->Init($productInfo) : null;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	function GetAttributeList()
-	{
-		if ( $this->attributeList )
-			return $this->attributeList;
-		
-		$CenterBuyAttributeExtra = Core::ImportExtra( 'CenterBuyAttribute' );
+    function GetAttributeList()
+    {
+        if ($this->attributeList)
+            return $this->attributeList;
 
-		$buyAttributeList = $CenterBuyAttributeExtra->GetGroup( $this->id );
+        $CenterBuyAttributeExtra = Core::ImportExtra('CenterBuyAttribute');
 
-		/*
-		if ( $this->info['buy_attribute_template_id'] > 0 )
-			$buyAttributeList = $CenterBuyAttributeExtra->GetGroup( 0, $this->info['buy_attribute_template_id'] );
-		elseif ( $this->info['buy_attribute_template_id'] == -1 )
-			$buyAttributeList = $CenterBuyAttributeExtra->GetGroup( $this->id );
-		else
-			$buyAttributeList = array();
-		*/
+        $buyAttributeList = $CenterBuyAttributeExtra->GetGroup($this->id);
 
-		if ( !$buyAttributeList )
-			$buyAttributeList = array();
+        /*
+        if ( $this->info['buy_attribute_template_id'] > 0 )
+            $buyAttributeList = $CenterBuyAttributeExtra->GetGroup( 0, $this->info['buy_attribute_template_id'] );
+        elseif ( $this->info['buy_attribute_template_id'] == -1 )
+            $buyAttributeList = $CenterBuyAttributeExtra->GetGroup( $this->id );
+        else
+            $buyAttributeList = array();
+        */
 
-		$this->attributeList = $buyAttributeList;
+        if (!$buyAttributeList)
+            $buyAttributeList = array();
 
-		return $this->attributeList;
-	}
+        $this->attributeList = $buyAttributeList;
 
-	function GetBaseSku()
-	{
-		$CenterProductModel = Core::ImportModel( 'CenterProduct' );
-		$CenterProductExtra = Core::ImportExtra( 'CenterProduct' );
+        return $this->attributeList;
+    }
 
-		$skuInfo = $CenterProductModel->GetBaseSku( $this->id );
+    function GetBaseSku()
+    {
+        $CenterProductModel = Core::ImportModel('CenterProduct');
+        $CenterProductExtra = Core::ImportExtra('CenterProduct');
 
-		$productId = $this->id;
+        $skuInfo = $CenterProductModel->GetBaseSku($this->id);
 
-		if ( !$skuInfo )
-		{
-			$hash = "{$productId}_" . md5( '' );
-			
-			$data = array();
-			$data['pid'] = $productId;
-			$data['hash_key'] = $hash;
-			$data['content'] = '';
-			$data['is_base'] = 1;
-			$data['add_time'] = time;
+        $productId = $this->id;
 
-			$CenterProductModel->AddSku( $data );
+        if (!$skuInfo) {
+            $hash = "{$productId}_" . md5('');
 
-			$skuInfo = $CenterProductModel->GetSkuByHash( $hash );
-		}
+            $data = array();
+            $data['pid'] = $productId;
+            $data['hash_key'] = $hash;
+            $data['content'] = '';
+            $data['is_base'] = 1;
+            $data['add_time'] = time;
 
-		return $CenterProductExtra->Id2Sku( $skuInfo['id'] );
-	}
+            $CenterProductModel->AddSku($data);
 
-	function GetSku1012( $attr_store,$attr_switch )
-	{
-		$CenterProductModel = Core::ImportModel( 'CenterProduct' );
-		$CenterProductExtra = Core::ImportExtra( 'CenterProduct' );
+            $skuInfo = $CenterProductModel->GetSkuByHash($hash);
+        }
+        // var_dump('TODO jieqiangtest $skuInfo[\'id\']== ',$skuInfo['id']);exit;
+        return $CenterProductExtra->Id2Sku($skuInfo['id']);
+    }
 
-		$productId = $this->id;
-		$content = 'a:1:{i:'.$attr_store.';a:2:{s:5:"input";s:'.strlen($attr_switch).':"'.$attr_switch.'";s:3:"vid";s:'.strlen($attr_switch).':"'.$attr_switch.'";}}';
-		$hash = $productId."_" . md5( $content );
-		$skuInfo = $CenterProductModel->GetSkuByHash( $hash );
+    function GetSku1012($attr_store, $attr_switch)
+    {
+        $CenterProductModel = Core::ImportModel('CenterProduct');
+        $CenterProductExtra = Core::ImportExtra('CenterProduct');
+
+        $productId = $this->id;
+        $content = 'a:1:{i:' . $attr_store . ';a:2:{s:5:"input";s:' . strlen($attr_switch) . ':"' . $attr_switch . '";s:3:"vid";s:' . strlen($attr_switch) . ':"' . $attr_switch . '";}}';
+        $hash = $productId . "_" . md5($content);
+        $skuInfo = $CenterProductModel->GetSkuByHash($hash);
 
 
-		if ( !$skuInfo )
-		{
-			$data = array();
-			$data['pid'] = $productId;
-			$data['hash_key'] = $hash;
-			$data['content'] = $content;
-			$data['is_base'] = $content == '' ? 1 : 0;
-			$data['add_time'] = time;
-			$CenterProductModel->AddSku( $data );
+        if (!$skuInfo) {
+            $data = array();
+            $data['pid'] = $productId;
+            $data['hash_key'] = $hash;
+            $data['content'] = $content;
+            $data['is_base'] = $content == '' ? 1 : 0;
+            $data['add_time'] = time;
+            $CenterProductModel->AddSku($data);
 
-			$skuInfo = $CenterProductModel->GetSkuByHash( $hash );
-			//$skuInfo = 0;
-		}
+            $skuInfo = $CenterProductModel->GetSkuByHash($hash);
+            //$skuInfo = 0;
+        }
 
-		return $CenterProductExtra->Id2Sku( $skuInfo['id'] );
-	}
-
+        return $CenterProductExtra->Id2Sku($skuInfo['id']);
+    }
 
 
-	function GetSku( $attributePost )
-	{
-		$CenterProductModel = Core::ImportModel( 'CenterProduct' );
-		$CenterProductExtra = Core::ImportExtra( 'CenterProduct' );
+    function GetSku($attributePost)
+    {
+        $CenterProductModel = Core::ImportModel('CenterProduct');
+        $CenterProductExtra = Core::ImportExtra('CenterProduct');
 
-		list( $hash, $content ) = $this->GetSkuHash( $productId, $attributePost );
+        list($hash, $content) = $this->GetSkuHash($productId, $attributePost);
 
-		$skuInfo = $CenterProductModel->GetSkuByHash( $hash );
+        $skuInfo = $CenterProductModel->GetSkuByHash($hash);
 
-		$productId = $this->id;
+        $productId = $this->id;
 
-		if ( !$skuInfo )
-		{
-			$data = array();
-			$data['pid'] = $productId;
-			$data['hash_key'] = $hash;
-			$data['content'] = $content;
-			$data['is_base'] = $content == '' ? 1 : 0;
-			$data['add_time'] = time;
-			$CenterProductModel->AddSku( $data );
+        if (!$skuInfo) {
+            $data = array();
+            $data['pid'] = $productId;
+            $data['hash_key'] = $hash;
+            $data['content'] = $content;
+            $data['is_base'] = $content == '' ? 1 : 0;
+            $data['add_time'] = time;
+            $CenterProductModel->AddSku($data);
 
-			$skuInfo = $CenterProductModel->GetSkuByHash( $hash );
-		}
+            $skuInfo = $CenterProductModel->GetSkuByHash($hash);
+        }
 
-		return $CenterProductExtra->Id2Sku( $skuInfo['id'] );
-	}
+        return $CenterProductExtra->Id2Sku($skuInfo['id']);
+    }
 
-	function GetSkuHash( $attributePost )
-	{
-		$CenterProductModel = Core::ImportModel( 'CenterProduct' );
-		
-		$attributeInputList = $this->GetSkuAttributeStore( $_POST['attr_store'], $_POST['attr_switch'] );
+    function GetSkuHash($attributePost)
+    {
+        $CenterProductModel = Core::ImportModel('CenterProduct');
 
-		if ( !$attributeInputList )
-			$content = '';
-		else
-			$content = serialize( $attributeInputList );
+        $attributeInputList = $this->GetSkuAttributeStore($_POST['attr_store'], $_POST['attr_switch']);
 
-		$productId = $this->id;
+        if (!$attributeInputList)
+            $content = '';
+        else
+            $content = serialize($attributeInputList);
 
-		$hash = "{$productId}_" . md5( $content );
+        $productId = $this->id;
 
-		return array( $hash, $content );
-	}
+        $hash = "{$productId}_" . md5($content);
 
-	function GetSkuAttributeStore( $select = array(), $switch = array() )
-	{
-		if ( !is_array( $select ) )
-			$select = array();
+        return array($hash, $content);
+    }
 
-		if ( !is_array( $switch ) )
-			$switch = array();
+    function GetSkuAttributeStore($select = array(), $switch = array())
+    {
+        if (!is_array($select))
+            $select = array();
 
-		$attributeList = $this->GetAttributeList();
+        if (!is_array($switch))
+            $switch = array();
 
-		$switchIndex = array();
-		foreach ( $switch as $val )
-		{
-			$switchIndex = @array_merge( $switchIndex, @explode( ',', $val ) );
-		}
+        $attributeList = $this->GetAttributeList();
 
-		$append = 0;
-		$attributeInputList = array();
-		foreach ( $attributeList as $attr )
-		{
-			$input = trim( $select[$attr['id']] );
+        $switchIndex = array();
+        foreach ($switch as $val) {
+            $switchIndex = @array_merge($switchIndex, @explode(',', $val));
+        }
 
-			if ( $attr['type'] != 'textgroup' )
-			{
-				if ( $input )
-				{
-					$valueSaveInfo = array();
-					$valueSaveInfo['input'] = $input;
+        $append = 0;
+        $attributeInputList = array();
+        foreach ($attributeList as $attr) {
+            $input = trim($select[$attr['id']]);
 
-					if ( $attr['type'] == 'text' )
-					{
-						$valueSaveInfo['vid'] = 0;
-					}
-					else
-					{
-						$valueSaveInfo['vid'] = $attr['value_list'][$input]['id'];
-					}
+            if ($attr['type'] != 'textgroup') {
+                if ($input) {
+                    $valueSaveInfo = array();
+                    $valueSaveInfo['input'] = $input;
 
-					$attributeInputList[$attr['id']] = $valueSaveInfo;
-				}
-			}
-			else
-			{
-				if ( is_array( $attr['value_list'] ) )
-				{
-					$inputList = array();
-					foreach ( $attr['value_list'] as $value )
-					{
-						$in = trim( $select[$attr['id']][$value['id']] );
+                    if ($attr['type'] == 'text') {
+                        $valueSaveInfo['vid'] = 0;
+                    } else {
+                        $valueSaveInfo['vid'] = $attr['value_list'][$input]['id'];
+                    }
 
-						if ( $in )
-						{
-							$valueSaveInfo = array();
-							$valueSaveInfo['input'] = $in;
-							$valueSaveInfo['vid'] = $value['id'];
+                    $attributeInputList[$attr['id']] = $valueSaveInfo;
+                }
+            } else {
+                if (is_array($attr['value_list'])) {
+                    $inputList = array();
+                    foreach ($attr['value_list'] as $value) {
+                        $in = trim($select[$attr['id']][$value['id']]);
 
-							$inputList[$value['id']] = $valueSaveInfo;
-						}
-					}
+                        if ($in) {
+                            $valueSaveInfo = array();
+                            $valueSaveInfo['input'] = $in;
+                            $valueSaveInfo['vid'] = $value['id'];
 
-					ksort( $inputList );
+                            $inputList[$value['id']] = $valueSaveInfo;
+                        }
+                    }
 
-					$attributeInputList[$attr['id']] = $inputList;
-				}
-			}
-		}
+                    ksort($inputList);
 
-		ksort( $attributeInputList );
+                    $attributeInputList[$attr['id']] = $inputList;
+                }
+            }
+        }
 
-		return $attributeInputList;
-	}
+        ksort($attributeInputList);
+
+        return $attributeInputList;
+    }
 }
 
 ?>

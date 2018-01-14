@@ -2,55 +2,54 @@
 
 class CenterProductExtra
 {
-	function CenterProductExtra()
-	{
-		
-	}
+    function CenterProductExtra()
+    {
 
-	// tlen = title length
-	// slen = summary length
-	function Explain( $list, $tlen = 20, $slen = 40 )
-	{
-		foreach ( $list as $key => $val )
-		{
-			$list[$key] = $this->ExplainOne( $val, $tlen, $slen );
-		}
+    }
 
-		return $list;
-	}
+    // tlen = title length
+    // slen = summary length
+    function Explain($list, $tlen = 20, $slen = 40)
+    {
+        foreach ($list as $key => $val) {
+            $list[$key] = $this->ExplainOne($val, $tlen, $slen);
+        }
 
-	function ExplainOne( $info, $tlen = 20, $slen = 40 )
-	{
-		// 图片
-		$pictureSizeList = Core::GetConfig( 'product_picture_size' );
+        return $list;
+    }
 
-		foreach ( $pictureSizeList as $imgType => $_s )
-		{
-			$info["image_{$imgType}_url"] = Common::GetProductPictureUrl( $info['id'], $imgType );
-		}
+    function ExplainOne($info, $tlen = 20, $slen = 40)
+    {
+        // 图片
+        $pictureSizeList = Core::GetConfig('product_picture_size');
 
-		// 名称
-		$info['sort_name'] = CutStr( $info['name'], $tlen );
-		$info['sort_summary'] = CutStr( $info['summary'], $slen );
+        foreach ($pictureSizeList as $imgType => $_s) {
+            $info["image_{$imgType}_url"] = Common::GetProductPictureUrl($info['id'], $imgType);
+        }
 
-		// 链接
-		$seoUri = preg_replace( '/[^0-9a-zA-Z]+/is', '-', htmlspecialchars_decode( $info['name'] ) ) . '_';
-		$info['seo_uri'] = $seoUri;
-		$info['detail_link'] = "/product/detail-{$info['id']}.html";
-		$info['detail_link_seo'] = "/product/{$seoUri}detail-{$info['id']}.html";
+        // 名称
+        $info['sort_name'] = CutStr($info['name'], $tlen);
+        $info['sort_summary'] = CutStr($info['summary'], $slen);
 
-		return $info;
-	}
-	
-	function Id2Sku( $id )
-	{
-		return 'S' . sprintf( '%09d', $id );
-	}
+        // 链接
+        $seoUri = preg_replace('/[^0-9a-zA-Z]+/is', '-', htmlspecialchars_decode($info['name'])) . '_';
+        $info['seo_uri'] = $seoUri;
+        $info['detail_link'] = "/product/detail-{$info['id']}.html";
+        $info['detail_link_seo'] = "/product/{$seoUri}detail-{$info['id']}.html";
 
-	function Sku2Id( $sku )
-	{
-		return intval( substr( $sku, 1 ) );
-	}
+        return $info;
+    }
+
+    // 商品id转sku
+    function Id2Sku($id)
+    {
+        return 'S' . sprintf('%09d', $id);
+    }
+
+    function Sku2Id($sku)
+    {
+        return intval(substr($sku, 1));
+    }
 }
 
 ?>
