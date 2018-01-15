@@ -30,8 +30,9 @@ else
 	$ClientAuth->SetAuthData( array(
 		'user_id' =>$userInfo['user_id'],
 		'user_name' => $userInfo['user_name'], 
-		'user_real_name' => $userInfo['user_real_name'], 
-		'user_group' => $userInfo['user_group']
+		'user_real_name' => $userInfo['user_real_name'],
+        'user_group' => $userInfo['user_group'],
+        'group' => $userInfo['user_group']
 	) );
 
 	$data = array();

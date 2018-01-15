@@ -304,6 +304,7 @@ class NEATTemplate
 		{
 			$this->vars[$key] = $value;
 		}
+		// var_dump('TODO jieqiangtest==$this->vars==',$this->vars);exit;
 	}
 
 	function Plugin( $obj )

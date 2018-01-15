@@ -29,6 +29,7 @@ class FrontController extends Controller
 
 		$AdminModel = Core::ImportModel( 'Admin' );
 
+		// TODO jieqiangtest 检查用户信息
 		$adminInfo = $AdminModel->GetAdministrator( $session['user_id'] );
 
 		//if ( !$adminInfo && !in_array( $this->module, $freeModule ) )
