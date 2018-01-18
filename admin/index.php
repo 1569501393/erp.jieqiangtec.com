@@ -49,16 +49,20 @@ Core::LoadClass( 'ModuleControl' );
 $ModuleControl = new ModuleControl( Core::GetConfig( 'config_path' ) . 'module.xml', Core::GetConfig( 'config_path' ) . 'module.php', array() );
 $ModuleControl->Load();
 
+//var_dump('TODO jieqiangtest==$ModuleControl==',$ModuleControl,debug_backtrace());exit;
+
 $AccessControl = new AccessControl();
 $AccessControl->SetAllow( array() );
 $AccessControl->SetModule( $ModuleControl->GetModule() );
+
+//var_dump('TODO jieqiangtest==$AccessControl==',$AccessControl,debug_backtrace());exit;
 
 /******** ********/
 
 $__UserAuth = Common::GetSession();
 
-$AdminModel = Core::ImportModel( 'Admin' );
 
+$AdminModel = Core::ImportModel( 'Admin' );
 // TODO jieqiangtest 检查用户信息
 $adminInfo = $AdminModel->GetAdministrator( $__UserAuth['user_id'] );
 $__UserAuth['user_group'] = $adminInfo['user_group'];
@@ -72,6 +76,7 @@ $quoteData['tpl']['SITE_URL'] = SITE_URL;
 $quoteData['tpl']['session'] = Common::GetSession();
 
 /******** Run ********/
+//var_dump('TODO jieqiangtest==$quoteData==',$quoteData,debug_backtrace());exit;
 $Controller = new FrontController( Core::GetConfig( 'app_module_path' ) );
 $Controller->Run( $quoteData );
 
