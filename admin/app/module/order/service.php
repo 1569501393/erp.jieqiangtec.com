@@ -7,7 +7,7 @@ echo strtotime( '2014-08-20 09:35:58' );
 // 不受时间限制
 ini_set('max_execution_time', '0');
 
-
+//var_dump('TODO jieqiangtest==',111);exit;
 include(Core::BLock('order.list_3'));
 
 if ($_GET['excel']) {
@@ -130,6 +130,12 @@ $tpl['page_bar'] = Common::PageBar($total, $onePage, $page);
 $tpl['page_bar_a'] = Common::PageBar_a($total, $onePage, $page);
 $tpl['page_bar_b'] = Common::PageBar_b($total, $onePage, $page);
 $tpl['onePage'] = $onePage;
+
+/*$t2 = microtime(true);
+echo '耗时'.round($t2-$t1,3).'秒<br>';
+echo 'Now memory_get_usage: ' . memory_get_usage() . '<br />';
+var_dump('TODO jieqiangtest==',$page, $offset, $onePage,$list);exit;*/
+
 Common::PageOut('order/service.html', $tpl);
 
 ?>

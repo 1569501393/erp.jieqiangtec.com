@@ -1,4 +1,6 @@
 <?php
+// TODO debug
+$t1 = microtime(true);
 
 $CenterOrderModel = Core::ImportModel('CenterOrder');
 $CenterChannelModel = Core::ImportModel('CenterChannel');
@@ -16,9 +18,10 @@ $CenterSupplierModel = Core::ImportModel('CenterSupplier');
 if ((int)$onePage < 1)
     $onePage = 10;
 
-
 list($page, $offset, $onePage) = Common::PageArg($onePage);
 
+//var_dump('TODO jieqiangtest==',$page, $offset, $onePage);exit;
+// TODO 屏蔽
 if ($_GET['excel']) {
     $offset = 0;
     $onePage = 0;
@@ -87,13 +90,15 @@ $tpl['finance_recieve_status_list'] = $orderFinanceRecieveList;
 $tpl['sign_status_list'] = $orderSignStatusList;
 $tpl['order_status_list'] = $orderOrderStatusList;
 
+/*$t2 = microtime(true);
+echo '耗时'.round($t2-$t1,3).'秒<br>';
+echo 'Now memory_get_usage: ' . memory_get_usage() . '<br />';
+var_dump('TODO jieqiangtest==',$page, $offset, $onePage,$list);exit;*/
 foreach ($list as $key => $val) {
     $list[$key]['channel_name'] = $channelList[$val['channel_id']]['name'];
     $list[$key]['import_type_name'] = $importTypeList[$val['import_type']];
     $list[$key]['payment_type_name'] = $paymentTypeList[$val['payment_type']];
-
     $list[$key]['status_name'] = $orderOrderStatusList[$val['status']]['name'];
-
     $list[$key]['delivery_type_name'] = $orderDeliveryTypeList[$val['delivery_type']];
     $list[$key]['delivery_status_name'] = $orderDeliveryStatusList[$val['delivery_status']];
     $list[$key]['lock_status_name'] = $orderLockStatusList[$val['lock_status']];
@@ -120,18 +125,25 @@ foreach ($list as $key => $val) {
     $list[$key]['order_time'] = DateFormat($val['order_time']);
     $list[$key]['finance_recieve_time'] = DateFormat($val['finance_recieve_time']);
 
-
     $purchaseCheckList = $ActionLogModel->GetList($val['id'], 'order_check_purchase');
     $serviceCheckList = $ActionLogModel->GetList($val['id'], 'order_check_service');
     $serviceEditUserList = $ActionLogModel->GetList($val['id'], 'order_edit_user');
     $serviceCallList = $ActionLogModel->GetList_1($val['id'], 'order_call_service');
-
     $serviceList = $ActionLogModel->GetList_2($val['id'], 'order_call_service');
+
+
+//    $t2 = microtime(true);
+//    echo '$ActionLogModel耗时'.round($t2-$t1,3).'秒<br>'; // $ActionLogModel耗时0.452秒
+//    echo 'Now memory_get_usage: ' . memory_get_usage() . '<br />';
+//    var_dump('TODO jieqiangtest==',$page, $offset, $onePage,$list);exit;
+
 
     foreach ($serviceCallList as $k => $v) {
         $AdminArray = Core::ImportModel('Admin')->GetAdministrator($v['user_id']);
         $serviceCallList[$k]['user_name_zh'] = $AdminArray['user_real_name'];
     }
+
+
 
     foreach ($serviceEditUserList as $k => $v) {
         $AdminArray = Core::ImportModel('Admin')->GetAdministrator($v['user_id']);
@@ -144,6 +156,8 @@ foreach ($list as $key => $val) {
         $AdminArray = Core::ImportModel('Admin')->GetAdministrator($v['user_id']);
         $purchaseCheckList[$k]['user_name_zh'] = $AdminArray['user_real_name'];
     }
+
+
 
     $tmp = array();
     foreach ($serviceCheckList as $k => $v) {
@@ -172,6 +186,8 @@ foreach ($list as $key => $val) {
     }
     $list[$key]['service_list'] = $serviceList;
     $list[$key]['service_check_string'] = implode('|', $tmp);
+
+
 
     // var_dump('TODO jieqiangtest==',$serviceCallList,$list,$total,$search,$page, $offset, $onePage);exit;
     $tmp = array();
@@ -205,6 +221,7 @@ foreach ($list as $key => $val) {
     */
 
     $productList = $CenterOrderModel->GetProductList($val['id']);
+
 
 
     $p = 0;
@@ -247,15 +264,20 @@ foreach ($list as $key => $val) {
 
         if ($p == 0)
             $list[$key]['order_invoice_product_m'] = $productList[$k]['productInfo']['name'];
-
-
         $p++;
     }
 
 
-    $list[$key]['list'] = $CenterOrderExtra->ExplainProduct($productList);
-}
 
+    $list[$key]['list'] = $CenterOrderExtra->ExplainProduct($productList);
+
+
+
+}
+/*$t2 = microtime(true);
+echo '耗时'.round($t2-$t1,3).'秒<br>';
+echo 'Now memory_get_usage: ' . memory_get_usage() . '<br />';
+var_dump('TODO jieqiangtest==',$page, $offset, $onePage,$list);exit;*/
 
 //var_dump('TODO jieqiangtest==',$list,$productList,$serviceCallList,$total,$search,$page, $offset, $onePage);exit;
 

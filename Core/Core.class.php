@@ -259,8 +259,9 @@ class Core
                 Core::LoadLib('NEATMySQL.class.php');
 
                 $GLOBALS['__BaseClass'][$objName] = new NEATMySQL($dataBaseInfo['host'], $dataBaseInfo['user'], $dataBaseInfo['pwd'], $dataBaseInfo['database'], 0, 1, $dataBaseInfo['table_prefix']);
+                // TODO 节约资源
                 $GLOBALS['__BaseClass'][$objName]->Query("SET character_set_connection=utf8, character_set_results=utf8, character_set_client=binary");
-                $GLOBALS['__BaseClass'][$objName]->Query("SET sql_mode=''");
+                // $GLOBALS['__BaseClass'][$objName]->Query("SET sql_mode=''");
 
                 break;
 

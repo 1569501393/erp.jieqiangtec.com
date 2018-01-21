@@ -122,13 +122,19 @@ class NEATMySQL
      */
     function Query($queryString, $beginRow = 0, $limit = 0)
     {
+        $t1 = microtime(true);
+        $usage1 = memory_get_usage();
         if ($limit)
             $queryString .= " LIMIT " . $beginRow . " , " . $limit;
 
         $queryid = mysql_query($queryString, $this->conn);
 
         // TODO 日志记录
-        log_write('NEATMySQL.class.php ==Query==' . "\r\n" . $queryString, 'NOTICE sql 查询 $queryid:' . $queryid);
+//        log_write('NEATMySQL.class.php ==Query==' . "\r\n" . $queryString, 'NOTICE sql 查询 $queryid:' . $queryid);
+//        log_write($queryString, 'NOTICE sql 耗时,' . microtime(true) - $t1 . ',内存,' . memory_get_usage() - $usage1 . ', $queryid:' . $queryid);
+        $t3 = round((microtime(true) - $t1),3);
+        $usage3 = memory_get_usage() - $usage1;
+        log_write('耗时,' . $t3 . 's,内存,' . $usage3 . ',$queryid,' . $queryid . "\r\n" . $queryString, 'NOTICE sql');
 //        var_dump('TODO jieqiangtest ==$rs==',$queryid);exit;
 
 
