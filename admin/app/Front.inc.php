@@ -23,8 +23,8 @@ class FrontController extends Controller
 
         // 如果是api且 http://erp.jieqiangtec.cn/admin/?mod=product.list
         // var_dump('TODO jieqiangtest==$firstModule==',$this->module,$inAccess,Common::GetSession(),debug_backtrace());exit;
-//        if ($this->module == 'product.list' && $_GET['api'] = 1) {
-        if ($this->module == 'product.list' ) {
+//        if (($this->module == 'product.list' || $this->module == 'product.edit') && $_GET['api'] = 1) {
+        if (($this->module == 'product.list' || $this->module == 'product.edit') ) {
             $session = 1;
         }
 
@@ -38,8 +38,8 @@ class FrontController extends Controller
 
         // 如果是api且 http://erp.jieqiangtec.cn/admin/?mod=product.list
         // var_dump('TODO jieqiangtest==$firstModule==',$this->module,$inAccess,Common::GetSession(),debug_backtrace());exit;
-//        if ($this->module == 'product.list' && $_GET['api'] = 1) {
-        if ($this->module == 'product.list' ) {
+//        if (($this->module == 'product.list' || $this->module == 'product.edit') && $_GET['api'] = 1) {
+        if (($this->module == 'product.list' || $this->module == 'product.edit') ) {
             $adminInfo = 1;
         }else{
             // TODO jieqiangtest 检查用户信息
@@ -54,8 +54,8 @@ class FrontController extends Controller
 
         // 如果是api且 http://erp.jieqiangtec.cn/admin/?mod=product.list
         // var_dump('TODO jieqiangtest==$firstModule==',$this->module,$inAccess,Common::GetSession(),debug_backtrace());exit;
-//        if ($this->module == 'product.list' && $_GET['api'] = 1) {
-        if ($this->module == 'product.list' ) {
+//        if (($this->module == 'product.list' || $this->module == 'product.edit') && $_GET['api'] = 1) {
+        if (($this->module == 'product.list' || $this->module == 'product.edit') ) {
             $groupInfo = 1;
         }else{
             $userGroup = $adminInfo['user_group'];

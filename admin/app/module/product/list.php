@@ -74,12 +74,12 @@ $productList = $CenterProductExtra->Explain($productList);
 
 $total = $CenterProductModel->GetTotal($search);
 
-// 接口返回值
+// jieqiang 接口返回值
 if ($_GET['api']){
     // var_dump('$productList==',$page, $offset, $onePage,$total,$productList);exit;
     $data['total'] = $total;
     $data['page'] = $page;
-    $data['offset'] = $offset;
+    $data['onePage'] = $onePage;
     $data['productList'] = $productList;
     echo json_encode($data);
     exit;
